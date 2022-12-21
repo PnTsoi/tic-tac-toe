@@ -21,14 +21,13 @@ const mainGame = () => {
     let AIMarker = "";
     let playerS = 0;
     let aiS = 0;
+    let listeners = []
     //function to reset game board
-    function handler(index) {
-        return checkBox(index);
-    }
     const setBoard = () => { 
         updateBoard();
         for(let i = 0; i < boxArray.length; i++) {
-            boxArray[i].addEventListener("click", handler(i));
+            listeners.push(() => {return checkBox(i);});
+            boxArray[i].addEventListener("click", listeners[i]);
         };
         playerMarker = markerArray[Math.floor(Math.random()*markerArray.length)];
         if(playerMarker == "X") {
@@ -157,8 +156,9 @@ const mainGame = () => {
     };
     const disableEvents = () => { 
         for(let i = 0; i < boxArray.length; i++) {
-            boxArray[i].removeEventListener("click", listener(i));
+            boxArray[i].removeEventListener("click", listeners[i]);
         };
+        listeners = [];
     };
     return {resetGame, updateBoard};
 };
